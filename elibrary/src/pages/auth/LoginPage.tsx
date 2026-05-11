@@ -5,9 +5,9 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { motion } from 'framer-motion'
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react'
-import { AuthLayout } from '@/components/layout/Authlayout'
+import { AuthLayout } from '@/components/layout/AuthLayout'
 import { Input } from '@/components/ui/Input'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/Button'
 import { useAuthStore } from '@/stores/auth'
 
 const loginSchema = z.object({

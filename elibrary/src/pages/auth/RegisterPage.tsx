@@ -8,16 +8,15 @@ import {
   Mail,
   Lock,
   GraduationCap,
-  BookOpen,
   ChevronRight,
   ArrowRight,
   Shield,
   Check,
 } from 'lucide-react'
-import { AuthLayout } from '@/components/layout/Authlayout'
+import { AuthLayout } from '@/components/layout/AuthLayout'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/Button'
 import { useAuthStore } from '@/stores/auth'
 
 import type { DegreeLevel, ResearchField } from '@/types'
