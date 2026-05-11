@@ -7,8 +7,7 @@ import {
   Bookmark,
   BookmarkCheck,
   Clock,
-  FileText,
-  ImageIcon,
+  FileText
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { VoteButton } from './VoteButton'
