@@ -19,6 +19,11 @@ const PaperDetailPage = lazy(() =>
   import('@/features/thesis/pages/PaperDetailPage').then((m) => ({ default: m.default }))
 )
 
+// Lazy-load the profile page for the same reason.
+const ProfilePage = lazy(() =>
+  import('@/features/profile/pages/ProfilePage').then((m) => ({ default: m.default }))
+)
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -45,6 +50,14 @@ export default function App() {
               element={
                 <Suspense fallback={<LoadingState label="Loading paper..." className="min-h-[60vh]" />}>
                   <PaperDetailPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/user/:id"
+              element={
+                <Suspense fallback={<LoadingState label="Loading profile..." className="min-h-[60vh]" />}>
+                  <ProfilePage />
                 </Suspense>
               }
             />
