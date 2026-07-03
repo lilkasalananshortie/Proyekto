@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import {
   BrowserRouter,
   Routes,
@@ -9,6 +10,14 @@ import LoginPage from '@/pages/auth/LoginPage'
 import RegisterPage from '@/pages/auth/RegisterPage'
 import FeedPage from '@/pages/feed/FeedPage'
 import MainLayout from '@/components/layout/MainLayout'
+import { LoadingState } from '@/components/ui/LoadingState'
+
+// Lazy-load the paper detail page — it's a heavy route (comment tree,
+// modals, etc.) and shouldn't be in the main bundle for users who only
+// hit /login or /feed.
+const PaperDetailPage = lazy(() =>
+  import('@/features/thesis/pages/PaperDetailPage').then((m) => ({ default: m.default }))
+)
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,6 +40,14 @@ export default function App() {
           {/* App routes — wrapped in MainLayout for dark bg */}
           <Route element={<MainLayout />}>
             <Route path="/feed" element={<FeedPage />} />
+            <Route
+              path="/paper/:id"
+              element={
+                <Suspense fallback={<LoadingState label="Loading paper..." className="min-h-[60vh]" />}>
+                  <PaperDetailPage />
+                </Suspense>
+              }
+            />
             <Route path="*" element={<Navigate to="/feed" replace />} />
           </Route>
         </Routes>
