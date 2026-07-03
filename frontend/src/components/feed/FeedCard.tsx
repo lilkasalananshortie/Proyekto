@@ -10,6 +10,8 @@ import {
   FileText
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { timeAgo, formatNumber, degreeShorthand } from '@/lib/format'
+import { Avatar } from '@/components/ui/Avatar'
 import { VoteButton } from './VoteButton'
 import { institutionNames } from '@/lib/feed-data'
 import { RESEARCH_FIELD_LABELS, PAPER_TYPE_LABELS } from '@/types'
@@ -20,50 +22,6 @@ interface FeedCardProps {
   index: number
   onVote: (paperId: string, direction: VoteDirection) => void
   onBookmark: (paperId: string) => void
-}
-
-function timeAgo(dateString: string): string {
-  const now = new Date()
-  const date = new Date(dateString)
-  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000)
-  if (seconds < 60) return 'just now'
-  const minutes = Math.floor(seconds / 60)
-  if (minutes < 60) return `${minutes}m ago`
-  const hours = Math.floor(minutes / 60)
-  if (hours < 24) return `${hours}h ago`
-  const days = Math.floor(hours / 24)
-  if (days < 30) return `${days}d ago`
-  const months = Math.floor(days / 30)
-  if (months < 12) return `${months}mo ago`
-  return `${Math.floor(months / 12)}y ago`
-}
-
-function formatNumber(n: number): string {
-  if (n >= 1000000) return `${(n / 1000000).toFixed(1)}M`
-  if (n >= 1000) return `${(n / 1000).toFixed(1)}k`
-  return n.toString()
-}
-
-function getInitials(name: string): string {
-  return name.split(' ').map((w) => w[0]).join('').toUpperCase().slice(0, 2)
-}
-
-function getAvatarColor(name: string): string {
-  const colors = [
-    'bg-flame/20 text-flame',
-    'bg-emerald-500/20 text-emerald-400',
-    'bg-violet-500/20 text-violet-400',
-    'bg-cyan-500/20 text-cyan-400',
-    'bg-rose-500/20 text-rose-400',
-    'bg-amber-500/20 text-amber-400',
-    'bg-blue-500/20 text-blue-400',
-    'bg-pink-500/20 text-pink-400',
-  ]
-  let hash = 0
-  for (let i = 0; i < name.length; i++) {
-    hash = name.charCodeAt(i) + ((hash << 5) - hash)
-  }
-  return colors[Math.abs(hash) % colors.length]
 }
 
 const coverPatterns = [
@@ -91,8 +49,6 @@ const thumbPatterns = [
 export function FeedCard({ item, index, onVote, onBookmark }: FeedCardProps) {
   const { paper, user_vote, is_bookmarked } = item
   const primaryAuthor = paper.authors.find((a) => a.is_primary) || paper.authors[0]
-  const authorInitials = primaryAuthor ? getInitials(primaryAuthor.name) : '??'
-  const authorColor = primaryAuthor ? getAvatarColor(primaryAuthor.name) : 'bg-flame/20 text-flame'
   const hasCoverImage = !!paper.cover_image_url
   const coverPattern = coverPatterns[index % coverPatterns.length]
   const thumbPattern = thumbPatterns[index % thumbPatterns.length]
@@ -133,14 +89,7 @@ export function FeedCard({ item, index, onVote, onBookmark }: FeedCardProps) {
                 to={`/user/${primaryAuthor.user_id}`}
                 className="flex items-center gap-2 mb-2 group/author"
               >
-                <div
-                  className={cn(
-                    'w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-bold font-mono flex-shrink-0 border border-border',
-                    authorColor
-                  )}
-                >
-                  {authorInitials}
-                </div>
+                <Avatar name={primaryAuthor.name} src={primaryAuthor.avatar_url} size="sm" />
                 <div className="flex items-center gap-1.5 text-[11px] font-mono min-w-0">
                   <span className="text-text-muted group-hover/author:text-flame transition-colors truncate">
                     {primaryAuthor.name}
@@ -166,7 +115,7 @@ export function FeedCard({ item, index, onVote, onBookmark }: FeedCardProps) {
                 {RESEARCH_FIELD_LABELS[paper.research_field]}
               </span>
               <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono bg-surface-3 text-text-dim border border-border">
-                {paper.degree_level === 'undergraduate' ? 'BS' : paper.degree_level === 'masteral' ? 'MS' : 'PhD'}
+                {degreeShorthand(paper.degree_level)}
               </span>
               <span className="inline-flex items-center gap-1 sm:hidden text-[10px] font-mono text-text-dim">
                 <Clock className="w-3 h-3" />
@@ -268,14 +217,7 @@ export function FeedCard({ item, index, onVote, onBookmark }: FeedCardProps) {
                 to={`/user/${primaryAuthor.user_id}`}
                 className="flex items-center gap-2 mb-2 group/author"
               >
-                <div
-                  className={cn(
-                    'w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold font-mono flex-shrink-0 border border-border',
-                    authorColor
-                  )}
-                >
-                  {authorInitials}
-                </div>
+                <Avatar name={primaryAuthor.name} src={primaryAuthor.avatar_url} size="md" />
                 <div className="flex flex-col sm:flex-row sm:items-center sm:gap-1.5 min-w-0">
                   <span className="text-xs sm:text-sm font-mono font-medium text-text group-hover/author:text-flame transition-colors truncate">
                     {primaryAuthor.name}
@@ -317,7 +259,7 @@ export function FeedCard({ item, index, onVote, onBookmark }: FeedCardProps) {
             {RESEARCH_FIELD_LABELS[paper.research_field]}
           </span>
           <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono bg-surface-3 text-text-dim border border-border">
-            {paper.degree_level === 'undergraduate' ? 'BS' : paper.degree_level === 'masteral' ? 'MS' : 'PhD'}
+            {degreeShorthand(paper.degree_level)}
           </span>
         </div>
       </div>
