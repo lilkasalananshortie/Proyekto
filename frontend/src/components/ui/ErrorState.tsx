@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react'
 import { motion } from 'framer-motion'
 import { AlertCircle, RefreshCw } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { Button } from './Button'
 
 interface ErrorStateProps {
@@ -25,7 +26,7 @@ export function ErrorState({
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className="card-glass p-8 text-center"
+      className={cn('card-glass p-8 text-center', className)}
     >
       <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-danger/10 border border-danger/30 flex items-center justify-center">
         <AlertCircle className="w-6 h-6 text-danger" />
